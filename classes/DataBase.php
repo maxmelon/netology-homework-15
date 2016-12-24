@@ -62,7 +62,7 @@ class DataBase
             $_SESSION['database'] = $_POST['database'];
         }
         if (!isset($_SESSION['database'])) {
-            $_SESSION['database'] = "tasks";
+            $_SESSION['database'] = DB_NAME_DEFAULT;
         }
     }
 }
