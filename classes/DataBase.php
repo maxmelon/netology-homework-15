@@ -6,7 +6,7 @@ class DataBase
     public function connectToDB()
     {
         try {
-            $this->pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";port=" . DB_PORT, DB_USER, DB_PASS);
+            $this->pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . $_SESSION['database'] . ";port=" . DB_PORT, DB_USER, DB_PASS);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->pdo->exec("SET NAMES 'utf8'");
         } catch (Exception $e) {
@@ -38,5 +38,31 @@ class DataBase
         $sth->execute();
         $result = $sth->fetchAll(PDO::FETCH_ASSOC);
         return $result;
+    }
+
+    /**
+     * Получаем все базы данных
+     * @return array
+     */
+    public function getAllDatabases()
+    {
+        $sth = $this->pdo->prepare('SHOW DATABASES');
+        $sth->execute();
+        $result = $sth->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    /**
+     * Записываем выбранную пользователем базу данных в переменную сессии
+     * @return void
+     */
+    public function selectDataBase()
+    {
+        if (isset($_POST['database'])) {
+            $_SESSION['database'] = $_POST['database'];
+        }
+        if (!isset($_SESSION['database'])) {
+            $_SESSION['database'] = "tasks";
+        }
     }
 }
